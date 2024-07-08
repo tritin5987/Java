@@ -1,7 +1,9 @@
 package com.example.thuchanh_tuan2.service;
 
 import com.example.thuchanh_tuan2.model.CartItem;
+import com.example.thuchanh_tuan2.model.Order;
 import com.example.thuchanh_tuan2.model.Product;
+import com.example.thuchanh_tuan2.repository.OrderRepository;
 import com.example.thuchanh_tuan2.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ public class CartService {
 
     @Autowired
     private ProductRepository productRepository;
+    private OrderRepository orderRepository;
 
     public void addToCart(Long productId, int quantity) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
@@ -50,4 +53,5 @@ public class CartService {
                 .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
                 .sum();
     }
+
 }

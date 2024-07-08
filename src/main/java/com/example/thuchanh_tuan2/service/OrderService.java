@@ -79,4 +79,8 @@ public class OrderService {
     public List<OrderDetail> getOrderDetailsByOrderId(Long orderId) {
         return orderDetailRepository.findByOrderId(orderId);
     }
+
+    public Order saveOrder(Order order) {
+        return orderRepository.save(order);
+    }
 }

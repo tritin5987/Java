@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,19 +33,45 @@ public class OrderController {
     }
 
     @PostMapping("/submit")
-    public String submitOrder(String customerName,
-                              String shippingAddress,
-                              String phoneNumber,
-                              String email,
-                              String notes,
-                              String paymentMethod) {
+    public String submitOrder(@RequestParam String customerName,
+                              @RequestParam String shippingAddress,
+                              @RequestParam String phoneNumber,
+                              @RequestParam String email,
+                              @RequestParam String notes,
+                              @RequestParam String paymentMethod) {
         List<CartItem> cartItems = cartService.getCartItems();
         if (cartItems.isEmpty()) {
             return "redirect:/cart"; // Redirect if cart is empty
         }
-        orderService.createOrder(customerName, shippingAddress, phoneNumber, email, notes, paymentMethod, cartItems);
+
+        // Calculate total price
+        double totalPrice = cartService.getTotalPrice();
+
+        // Create order
+        Order order = new Order();
+        order.setCustomerName(customerName);
+        order.setShippingAddress(shippingAddress);
+        order.setPhoneNumber(phoneNumber);
+        order.setEmail(email);
+        order.setNotes(notes);
+        order.setPaymentMethod(paymentMethod);
+
+        // Set order date to current date
+        order.setOrderDate(LocalDateTime.now());
+
+        // Set total price for the order
+        order.setTotalprice(totalPrice);
+
+        // Save order to database
+        orderService.saveOrder(order);
+
+        // Clear cart after order is submitted
+        cartService.clearCart();
+
         return "redirect:/order/confirmation";
     }
+
+
 
     @GetMapping("/confirmation")
     public String orderConfirmation(Model model) {

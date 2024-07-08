@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Setter
@@ -24,7 +25,8 @@ public class Order {
     private String email;
     private String notes;
     private String paymentMethod;
-    private LocalDate orderDate;
+    private LocalDateTime orderDate;
+    private double Totalprice;
     @OneToMany(mappedBy = "order")
     private List<OrderDetail> orderDetails;
 

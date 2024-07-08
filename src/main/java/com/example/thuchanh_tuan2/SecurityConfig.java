@@ -43,15 +43,18 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/", "/oauth/**", "/register", "/error",
-                                "/products", "/cart", "/cart/**","/static/**")
+                                "/products", "/cart", "/cart/**")
                         .permitAll()
                         .requestMatchers("/products/edit/**", "/products/add", "/products/delete","/api/products","categories/add","order/list/**")
                         .hasAnyAuthority("ADMIN")
                         .requestMatchers("/api/**")
                         .permitAll()
-                        .requestMatchers("/changePassword").authenticated()
-                        .requestMatchers("/forgot-password").permitAll()
-                        .requestMatchers("/reset-password").permitAll()
+                        .requestMatchers("/changePassword")
+                        .authenticated()
+                        .requestMatchers("/forgot-password")
+                        .permitAll()
+                        .requestMatchers("/reset-password")
+                        .permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout

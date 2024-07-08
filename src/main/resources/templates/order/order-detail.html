@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Detail</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>Order Detail</h2>
+
+    <h3>Order Information:</h3>
+    <p>ID: <span th:text="${order.id}"></span></p>
+    <p>Customer Name: <span th:text="${order.customerName}"></span></p>
+    <p>Email: <span th:text="${order.email}"></span></p>
+    <p>Notes: <span th:text="${order.notes}"></span></p>
+    <p>Payment Method: <span th:text="${order.paymentMethod}"></span></p>
+    <p>Phone: <span th:text="${order.phoneNumber}"></span></p>
+
+    <h3>Order Details:</h3>
+    <table class="table table-bordered">
+        <thead class="table-primary">
+        <tr>
+            <th>ID Order</th>
+            <th>Product ID</th>
+            <th>Price</th>
+            <th>Quantity</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="orderDetail : ${orderDetails}">
+            <td th:text="${orderDetail.id}"></td>
+            <td th:text="${orderDetail.product.id}"></td>
+            <td th:text="${orderDetail.product.price}"></td>
+            <td th:text="${orderDetail.quantity}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Bootstrap JS (optional) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

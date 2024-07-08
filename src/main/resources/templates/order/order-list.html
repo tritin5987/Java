@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order List</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        /* Optional: Add custom styles here */
+        .container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Order List</h2>
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Tên</th>
+            <th>Email</th>
+            <th>Note</th>
+            <th>Payment</th>
+            <th>Phone</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterate over orders and display each order -->
+        <th:block th:each="order : ${orders}">
+            <tr>
+                <td th:text="${order.id}"></td>
+                <td th:text="${order.customerName}"></td>
+                <td th:text="${order.email}"></td>
+                <td th:text="${order.notes}"></td>
+                <td th:text="${order.paymentMethod}"></td>
+                <td th:text="${order.phoneNumber}"></td>
+                <td>
+                    <a class="btn btn-primary" th:href="@{/order/{orderId}(orderId=${order.id})}">View Details</a>
+                    <a class="btn btn-secondary" th:href="@{/order/{orderId}/edit(orderId=${order.id})}">Edit</a>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</div>
+
+<!-- Bootstrap JS (optional, if needed for dropdowns, etc.) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

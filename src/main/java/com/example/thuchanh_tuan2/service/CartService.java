@@ -1,6 +1,5 @@
 package com.example.thuchanh_tuan2.service;
 
-
 import com.example.thuchanh_tuan2.model.CartItem;
 import com.example.thuchanh_tuan2.model.Product;
 import com.example.thuchanh_tuan2.repository.ProductRepository;
@@ -20,8 +19,7 @@ public class CartService {
     private ProductRepository productRepository;
 
     public void addToCart(Long productId, int quantity) {
-        Product product = productRepository.findById(productId).orElseThrow(()
-        -> new IllegalArgumentException("Product not found:" + productId));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
         cartItems.add(new CartItem(product, quantity));
     }
 
@@ -46,10 +44,10 @@ public class CartService {
         }
         throw new IllegalArgumentException("Product not found in cart: " + productId);
     }
+
     public double getTotalPrice() {
         return cartItems.stream()
                 .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
                 .sum();
     }
-
 }

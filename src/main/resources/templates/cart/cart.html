@@ -41,7 +41,7 @@
         <div class="card" style="width: 18rem;">
             <div class="card-body">
                 <h5 class="card-title">Total Price</h5>
-                <p class="card-text" th:text="${totalPrice} + ' USD'"></p>
+                <p id="total-price" class="card-text" th:text="${totalPrice} + ' USD'"></p>
             </div>
         </div>
     </div>
@@ -66,12 +66,16 @@
             },
             body: 'productId=' + encodeURIComponent(productId) + '&quantity=' + encodeURIComponent(quantity)
         })
-            .then(response => {
-                if (response.ok) {
-                    // Calculate and update total price in the table cell
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the total price in the cart
+                    document.querySelector('.card-text').innerText = data.totalPrice + ' USD';
+
+                    // Update individual item total price
                     var priceElement = input.parentNode.nextElementSibling.nextElementSibling; // Select the third <td> which contains total price
                     var originalPrice = parseFloat(priceElement.previousElementSibling.innerText.trim()); // Get the original price
-                    priceElement.innerText = originalPrice * quantity; // Update with the new total price
+                    priceElement.innerText = (originalPrice * quantity) + ' USD'; // Update with the new total price
                 } else {
                     throw new Error('Failed to update quantity');
                 }
@@ -81,3 +85,4 @@
             });
     }
 </script>
+

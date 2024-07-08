@@ -1,35 +1,35 @@
 package com.example.thuchanh_tuan2.controller;
 
-
 import com.example.thuchanh_tuan2.model.CartItem;
 import com.example.thuchanh_tuan2.model.Order;
 import com.example.thuchanh_tuan2.model.OrderDetail;
-import com.example.thuchanh_tuan2.model.Product;
-import com.example.thuchanh_tuan2.repository.OrderDetailRepository;
 import com.example.thuchanh_tuan2.service.CartService;
 import com.example.thuchanh_tuan2.service.OrderService;
-import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @Controller
 @RequestMapping("/order")
 public class OrderController {
+
     @Autowired
     private CartService cartService;
+
     @Autowired
     private OrderService orderService;
-
-    @Autowired
-    private OrderDetailRepository orderDetailRepository;
-
 
     @GetMapping("/checkout")
     public String checkout() {
         return "/cart/checkout";
     }
+
     @PostMapping("/submit")
     public String submitOrder(String customerName,
                               String shippingAddress,
@@ -41,7 +41,7 @@ public class OrderController {
         if (cartItems.isEmpty()) {
             return "redirect:/cart"; // Redirect if cart is empty
         }
-        orderService.createOrder(customerName,shippingAddress,phoneNumber,email,notes,paymentMethod, cartItems);
+        orderService.createOrder(customerName, shippingAddress, phoneNumber, email, notes, paymentMethod, cartItems);
         return "redirect:/order/confirmation";
     }
 
@@ -52,10 +52,18 @@ public class OrderController {
     }
 
     @PostMapping("/updateQuantity")
-    public String updateCartItemQuantity(@RequestParam Long productId, @RequestParam int quantity) {
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateCartItemQuantity(@RequestParam Long productId, @RequestParam int quantity) {
         cartService.updateCartItemQuantity(productId, quantity);
-        return "redirect:/cart";
+        double totalPrice = cartService.getTotalPrice();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("totalPrice", totalPrice);
+
+        return ResponseEntity.ok(response);
     }
+
     @GetMapping("/list")
     public String listOrders(Model model) {
         List<Order> orders = orderService.getAllOrders();
@@ -68,12 +76,14 @@ public class OrderController {
         orderService.deleteOrder(orderId);
         return "redirect:/order/list";
     }
+
     @GetMapping("/{orderId}/edit")
     public String showEditOrderForm(@PathVariable Long orderId, Model model) {
         Order order = orderService.getOrderById(orderId);
         model.addAttribute("order", order);
         return "order/order-edit";
     }
+
     @PostMapping("/{orderId}/edit")
     public String updateOrder(@PathVariable Long orderId,
                               @RequestParam String customerName,
@@ -92,6 +102,7 @@ public class OrderController {
 
         return "redirect:/order/list";
     }
+
     @GetMapping("/{orderId}")
     public String viewOrderDetails(@PathVariable Long orderId, Model model) {
         Order order = orderService.getOrderById(orderId);
@@ -101,9 +112,4 @@ public class OrderController {
         model.addAttribute("orderDetails", orderDetails);
         return "order/order-detail";
     }
-
-
-
-
 }
-
